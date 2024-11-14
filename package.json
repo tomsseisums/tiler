@@ -1,0 +1,21 @@
+{
+    "name": "com.protogax.tiler",
+    "version": "0.0.1-dev",
+    "displayName": "Tiler",
+    "description": "Tiler is a Unity 3D auto-tiling tool for Editor as well as Runtime, heavily inspired by the Warcraft 3 World Editor",
+    "unity": "6000.0",
+    "unityRelease": "24f1",
+    "documentationUrl": "https://github.com/tomsseisums/tiler/blob/main/README.md",
+    "changelogUrl": "https://github.com/tomsseisums/tiler/blob/main/CHANGELOG.md",
+    "licensesUrl": "https://github.com/tomsseisums/tiler/blob/main/LICENSE",
+    "keywords": [
+        "auto-tiler",
+        "world-editor",
+        "level-editor"
+    ],
+    "author": {
+        "name": "Toms Seisums",
+        "email": "tom@protogax.com",
+        "url": "https://protogax.com"
+    }
+  }
