@@ -6,7 +6,7 @@ using UnityEngine;
 namespace protogax.Tiler.Editor
 {
     [EditorTool("Tiler Tool", typeof(TilerWorld))]
-    public class TilerTool : EditorTool, IDrawSelectedHandles {
+    public class TilerEditorTool : EditorTool, IDrawSelectedHandles {
         private TilerWorld tilerWorld;
 
         private Plane basePlane;
@@ -156,7 +156,7 @@ namespace protogax.Tiler.Editor
         [Shortcut("Activate Tiler Tool", typeof(SceneView), KeyCode.T)]
         public static void TilerToolShortcut() {
             if (Selection.GetFiltered<TilerWorld>(SelectionMode.TopLevel).Length > 0) {
-                ToolManager.SetActiveTool<TilerTool>();
+                ToolManager.SetActiveTool<TilerEditorTool>();
             } else {
                 Debug.Log("No Tiler selected.");
             }
