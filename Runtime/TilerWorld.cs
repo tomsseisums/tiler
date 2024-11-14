@@ -1,7 +1,7 @@
 using UnityEngine;
 
-namespace Tiler {
-    public class Tiler : MonoBehaviour
+namespace protogax.Tiler {
+    public class TilerWorld : MonoBehaviour
     {
         [field: SerializeField]
         public int Rows {get; private set;} = 10;

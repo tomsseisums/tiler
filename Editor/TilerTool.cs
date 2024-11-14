@@ -3,23 +3,23 @@ using UnityEditor.EditorTools;
 using UnityEditor.ShortcutManagement;
 using UnityEngine;
 
-namespace Tiler.Editor
+namespace protogax.Tiler.Editor
 {
-    [EditorTool("Tiler Tool", typeof(Tiler))]
+    [EditorTool("Tiler Tool", typeof(TilerWorld))]
     public class TilerTool : EditorTool, IDrawSelectedHandles {
-        private Tiler tiler;
+        private TilerWorld tilerWorld;
 
-        private Plane tilerBasePlane;
+        private Plane basePlane;
         private bool lastMouseOverTile = false;
         private Vector2Int highlightedTile = new Vector2Int(int.MinValue, int.MinValue);
 
         void OnEnable() {
-            tiler = target as Tiler;
+            tilerWorld = target as TilerWorld;
         }
 
         public override void OnActivated()
         {
-            tilerBasePlane = new Plane(Vector3.up, new Vector3(0, tiler.transform.position.y, 0));
+            basePlane = new Plane(Vector3.up, new Vector3(0, tilerWorld.transform.position.y, 0));
         }
 
         public override void OnToolGUI(EditorWindow window)
@@ -78,10 +78,10 @@ namespace Tiler.Editor
         private void DrawHighlightedTile(Vector2Int tile) {
             // Compute tile corners.
             Vector3[] corners = new Vector3[] {
-                tiler.Origin + new Vector3(tile.x * tiler.Size, 0, tile.y * tiler.Size),
-                tiler.Origin + new Vector3(tile.x * tiler.Size + tiler.Size, 0, tile.y * tiler.Size),
-                tiler.Origin + new Vector3(tile.x * tiler.Size + tiler.Size, 0, tile.y * tiler.Size + tiler.Size),
-                tiler.Origin + new Vector3(tile.x * tiler.Size, 0, tile.y * tiler.Size + tiler.Size)
+                tilerWorld.Origin + new Vector3(tile.x * tilerWorld.Size, 0, tile.y * tilerWorld.Size),
+                tilerWorld.Origin + new Vector3(tile.x * tilerWorld.Size + tilerWorld.Size, 0, tile.y * tilerWorld.Size),
+                tilerWorld.Origin + new Vector3(tile.x * tilerWorld.Size + tilerWorld.Size, 0, tile.y * tilerWorld.Size + tilerWorld.Size),
+                tilerWorld.Origin + new Vector3(tile.x * tilerWorld.Size, 0, tile.y * tilerWorld.Size + tilerWorld.Size)
             };
 
             // Draw solid tile.
@@ -100,16 +100,16 @@ namespace Tiler.Editor
             var ray = HandleUtility.GUIPointToWorldRay(mousePosition);
 
             // Check if the ray intersects with the tiler's base plane.
-            if (tilerBasePlane.Raycast(ray, out float distance)) {
+            if (basePlane.Raycast(ray, out float distance)) {
                 Vector3 wp = ray.origin + ray.direction.normalized * distance;
-                Vector3 relativePos = wp - tiler.Origin;
+                Vector3 relativePos = wp - tilerWorld.Origin;
 
                 // Compute tile coordinates.
-                int tileX = Mathf.FloorToInt(relativePos.x / tiler.Size);
-                int tileZ = Mathf.FloorToInt(relativePos.z / tiler.Size);
+                int tileX = Mathf.FloorToInt(relativePos.x / tilerWorld.Size);
+                int tileZ = Mathf.FloorToInt(relativePos.z / tilerWorld.Size);
 
                 // Check if the tile is within the grid bounds.
-                if (tileX >= 0 && tileX < tiler.Rows && tileZ >= 0 && tileZ < tiler.Columns) {
+                if (tileX >= 0 && tileX < tilerWorld.Rows && tileZ >= 0 && tileZ < tilerWorld.Columns) {
                     tile = new Vector2Int(tileX, tileZ);
                     return true;
                 }
@@ -120,16 +120,16 @@ namespace Tiler.Editor
 
         private void PlaceTile(Vector2Int tile) {
             var tileWorldCenter = GetTileWorldCenter(tile);
-            var tileObject = Instantiate(tiler.TilePrefab, tileWorldCenter, Quaternion.identity);
-            tileObject.transform.parent = tiler.transform;
+            var tileObject = Instantiate(tilerWorld.TilePrefab, tileWorldCenter, Quaternion.identity);
+            tileObject.transform.parent = tilerWorld.transform;
         }
 
         private Vector3 GetTileWorldOrigin(Vector2Int tile) {
-            return tiler.Origin + new Vector3(tile.x * tiler.Size, 0, tile.y * tiler.Size);
+            return tilerWorld.Origin + new Vector3(tile.x * tilerWorld.Size, 0, tile.y * tilerWorld.Size);
         }
 
         private Vector3 GetTileWorldCenter(Vector2Int tile) {
-            return GetTileWorldOrigin(tile) + new Vector3(tiler.Size / 2f, 0, tiler.Size / 2f);
+            return GetTileWorldOrigin(tile) + new Vector3(tilerWorld.Size / 2f, 0, tilerWorld.Size / 2f);
         }
 
         public void OnDrawHandles()
@@ -137,25 +137,25 @@ namespace Tiler.Editor
             Handles.color = Color.white;
 
             // Draw row (x) lines 
-            for (int x = 0; x <= tiler.Rows; x++)
+            for (int x = 0; x <= tilerWorld.Rows; x++)
             {
-                Vector3 start = tiler.Origin + new Vector3(x * tiler.Size, 0, 0);
-                Vector3 end = start + new Vector3(0, 0, tiler.Columns * tiler.Size);
+                Vector3 start = tilerWorld.Origin + new Vector3(x * tilerWorld.Size, 0, 0);
+                Vector3 end = start + new Vector3(0, 0, tilerWorld.Columns * tilerWorld.Size);
                 Handles.DrawLine(start, end);
             }
 
             // Draw column(z) lines
-            for (int z = 0; z <= tiler.Columns; z++)
+            for (int z = 0; z <= tilerWorld.Columns; z++)
             {
-                Vector3 start = tiler.Origin + new Vector3(0, 0, z * tiler.Size);
-                Vector3 end = start + new Vector3(tiler.Rows * tiler.Size, 0, 0);
+                Vector3 start = tilerWorld.Origin + new Vector3(0, 0, z * tilerWorld.Size);
+                Vector3 end = start + new Vector3(tilerWorld.Rows * tilerWorld.Size, 0, 0);
                 Handles.DrawLine(start, end);
             }
         }
 
         [Shortcut("Activate Tiler Tool", typeof(SceneView), KeyCode.T)]
         public static void TilerToolShortcut() {
-            if (Selection.GetFiltered<Tiler>(SelectionMode.TopLevel).Length > 0) {
+            if (Selection.GetFiltered<TilerWorld>(SelectionMode.TopLevel).Length > 0) {
                 ToolManager.SetActiveTool<TilerTool>();
             } else {
                 Debug.Log("No Tiler selected.");

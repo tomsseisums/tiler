@@ -1,0 +1,16 @@
+{
+    "name": "com.protogax.Tiler.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:da071134333deac47a2a238af77dd12e"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
